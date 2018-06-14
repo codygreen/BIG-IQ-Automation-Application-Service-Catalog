@@ -1,0 +1,123 @@
+{
+    "resources": {
+        "ltm:virtual:ad8b88a0d648": [{
+            "parameters": {
+                "name": "{{big-iq-app-name}}",
+                "destinationAddress": "{{big-iq-app-ip}}",
+                "mask": "255.255.255.255",
+                "destinationPort": "80"
+            },
+            "parametersToRemove": [],
+            "subcollectionResources": {
+                "profiles:7fcb57d260da": [{
+                    "parameters": {},
+                    "parametersToRemove": []
+                }],
+                "profiles:562743e454d3": [{
+                    "parameters": {},
+                    "parametersToRemove": []
+                }],
+                "profiles:ac342ed5842f": [{
+                    "parameters": {},
+                    "parametersToRemove": []
+                }]
+            }
+        }],
+        "ltm:pool:94adec8403f0": [{
+            "parameters": {
+                "name": "{{big-iq-app-name}}",
+                "loadBalancingMode": "least-connections-member",
+                "ignorePersistedWeight": false
+            },
+            "parametersToRemove": [],
+            "subcollectionResources": {
+                "members:442e85bcdee5": [{
+                        "parameters": {
+                            "port": 80,
+                            "nodeReference": {
+                                "link": "#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-1-name}}",
+                                "fullPath": "# {{big-iq-app-node-1-name}}"
+                            }
+                        },
+                        "parametersToRemove": []
+                    },
+                    {
+                        "parameters": {
+                            "port": 80,
+                            "nodeReference": {
+                                "link": "#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-2-name}}",
+                                "fullPath": "# {{big-iq-app-node-2-name}}"
+                            }
+                        },
+                        "parametersToRemove": []
+                    },
+                    {
+                        "parameters": {
+                            "port": 80,
+                            "nodeReference": {
+                                "link": "#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-3-name}}",
+                                "fullPath": "# {{big-iq-app-node-3-name}}"
+                            }
+                        },
+                        "parametersToRemove": []
+                    }
+                ]
+            }
+        }],
+        "ltm:node:39acd0a9b5ff": [{
+                "parameters": {
+                    "name": "{{big-iq-app-node-1-name}}",
+                    "address": "{{big-iq-app-node-1-ip}}"
+                },
+                "parametersToRemove": []
+            },
+            {
+                "parameters": {
+                    "name": "{{big-iq-app-node-2-name}}",
+                    "address": "{{big-iq-app-node-2-ip}}"
+                },
+                "parametersToRemove": []
+            },
+            {
+                "parameters": {
+                    "name": "{{big-iq-app-node-3-name}}",
+                    "address": "{{big-iq-app-node-3-ip}}"
+                },
+                "parametersToRemove": []
+            }
+        ],
+        "monitor:http:0f170bc99595": [{
+            "parameters": {
+                "name": "monitor-http",
+                "send": "GET /\\r\\n"
+            },
+            "parametersToRemove": []
+        }],
+        "profile:http:7fcb57d260da": [{
+            "parameters": {
+                "name": "profile_http"
+            },
+            "parametersToRemove": []
+        }],
+        "ltm:profile:tcp:562743e454d3": [{
+            "parameters": {
+                "name": "f5-tcp-lan"
+            },
+            "parametersToRemove": []
+        }],
+        "ltm:profile:tcp:ac342ed5842f": [{
+            "parameters": {
+                "name": "tcp-wan-dell"
+            },
+            "parametersToRemove": []
+        }]
+    },
+    "addAnalytics": true,
+    "domains": [],
+    "configSetName": "{{big-iq-app-name}}",
+    "subPath": "{{big-iq-app-name}}",
+    "templateReference": {
+        "link": "https://localhost/mgmt/cm/global/templates/13ba49e8-4b80-33fb-9782-e24a7c86e73b"
+    },
+    "mode": "UPDATE"
+}

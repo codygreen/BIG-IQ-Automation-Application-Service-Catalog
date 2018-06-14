@@ -1,0 +1,91 @@
+{
+  "id": "356e52fe-0327-4dc3-897a-28c8c7af23da",
+  "name": "BIG-IQ Application Service Catalog",
+  "values": [
+    {
+      "key": "big-iq",
+      "value": "10.1.1.10",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-user",
+      "value": "admin",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-password",
+      "value": "admin",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-name",
+      "value": "Automation-Test",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-ip",
+      "value": "10.20.1.10",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-port",
+      "value": "80",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-1-name",
+      "value": "app1",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-1-ip",
+      "value": "10.10.1.10",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-2-name",
+      "value": "app2",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-2-ip",
+      "value": "10.10.1.11",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-3-name",
+      "value": "app3",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-node-3-ip",
+      "value": "10.10.1.12",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-app-pool-member-port",
+      "value": "80",
+      "enabled": true,
+      "type": "text"
+    },
+    {
+      "key": "big-iq-token",
+      "value": "",
+      "enabled": true,
+      "type": "text"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "cd710184-fba9-4fce-b6a1-0e1e006bbbe6",
+		"name": "BIG-IQ Application Service Catalog",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Auth Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "cb857f60-4faa-433b-87dc-8898d5d01d9d",
+						"type": "text/javascript",
+						"exec": [
+							"eval(postman.getGlobalVariable(\"_f5_workflow_functions\"));",
+							"",
+							"var populate_vars = [",
+							"        {name:\"big-iq-token\", value:\"token.token\"}",
+							"    ];",
+							"    ",
+							"f5_populate_env_vars(populate_vars);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": {{big-iq-user}},\n\t\"password\":{{big-iq-password}},\n\t\"loginProviderName\": \"tmos\"\n}"
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/shared/authn/login",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"shared",
+						"authn",
+						"login"
+					]
+				},
+				"description": "Get Authentication Token from big-iq"
+			},
+			"response": []
+		},
+		{
+			"name": "Create App ",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resources\": {\r\n        \"ltm:virtual:ad8b88a0d648\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-name}}\",\r\n                    \"destinationAddress\": \"{{big-iq-app-ip}}\",\r\n                    \"mask\": \"255.255.255.255\",\r\n                    \"destinationPort\": \"80\"\r\n                },\r\n                \"parametersToRemove\": [],\r\n                \"subcollectionResources\": {\r\n                    \"profiles:7fcb57d260da\": [\r\n                        {\r\n                            \"parameters\": {},\r\n                            \"parametersToRemove\": []\r\n                        }\r\n                    ],\r\n                    \"profiles:562743e454d3\": [\r\n                        {\r\n                            \"parameters\": {},\r\n                            \"parametersToRemove\": []\r\n                        }\r\n                    ],\r\n                    \"profiles:ac342ed5842f\": [\r\n                        {\r\n                            \"parameters\": {},\r\n                            \"parametersToRemove\": []\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        ],\r\n        \"ltm:pool:94adec8403f0\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-name}}\",\r\n                    \"loadBalancingMode\": \"least-connections-member\",\r\n                    \"ignorePersistedWeight\": false\r\n                },\r\n                \"parametersToRemove\": [],\r\n                \"subcollectionResources\": {\r\n                    \"members:442e85bcdee5\": [\r\n                        {\r\n                            \"parameters\": {\r\n                                \"port\": 80,\r\n                                \"nodeReference\": {\r\n                                    \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-1-name}}\",\r\n                                    \"fullPath\": \"# {{big-iq-app-node-1-name}}\"\r\n                                }\r\n                            },\r\n                            \"parametersToRemove\": []\r\n                        },\r\n                        {\r\n                            \"parameters\": {\r\n                                \"port\": 80,\r\n                                \"nodeReference\": {\r\n                                    \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-2-name}}\",\r\n                                    \"fullPath\": \"# {{big-iq-app-node-2-name}}\"\r\n                                }\r\n                            },\r\n                            \"parametersToRemove\": []\r\n                        }\r\n                    ]\r\n                }\r\n            }\r\n        ],\r\n        \"ltm:node:39acd0a9b5ff\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-1-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-1-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            },\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-2-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-2-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"monitor:http:0f170bc99595\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"monitor-http\",\r\n                    \"send\": \"GET /\\\\r\\\\n\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"profile:http:7fcb57d260da\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"profile_http\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"ltm:profile:tcp:562743e454d3\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"f5-tcp-lan\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"ltm:profile:tcp:ac342ed5842f\": [\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"tcp-wan-dell\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ]\r\n    },\r\n    \"addAnalytics\": false,\r\n    \"domains\": [],\r\n    \"configSetName\": \"{{big-iq-app-name}}\",\r\n    \"defaultDeviceReference\": {\r\n        \"link\": \"https://localhost/mgmt/shared/resolver/device-groups/cm-adccore-allbigipDevices/devices/12f8d632-c5f2-4713-8081-3f99a56a4f23\"\r\n    },\r\n    \"subPath\": \"{{big-iq-app-name}}\",\r\n    \"templateReference\": {\r\n        \"link\": \"https://localhost/mgmt/cm/global/templates/13ba49e8-4b80-33fb-9782-e24a7c86e73b\"\r\n    },\r\n    \"mode\": \"CREATE\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/tasks/apply-template",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"tasks",
+						"apply-template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Status",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/tasks/apply-template?$filter=configSetName eq  '{{big-iq-app-name}}'&$orderby=lastUpdateMicros+desc&$skip=0&$top=1",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"tasks",
+						"apply-template"
+					],
+					"query": [
+						{
+							"key": "$filter",
+							"value": "configSetName eq  '{{big-iq-app-name}}'"
+						},
+						{
+							"key": "$orderby",
+							"value": "lastUpdateMicros+desc"
+						},
+						{
+							"key": "$skip",
+							"value": "0"
+						},
+						{
+							"key": "$top",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Templates",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/templates",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"templates"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete App",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"configSetName\": {{big-iq-app-name}}, \"mode\": \"DELETE\"}"
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/tasks/apply-template",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"tasks",
+						"apply-template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Pool Member ",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resources\": {\r\n        \"ltm:virtual:ad8b88a0d648\": [{\r\n            \"parameters\": {\r\n                \"name\": \"{{big-iq-app-name}}\",\r\n                \"destinationAddress\": \"{{big-iq-app-ip}}\",\r\n                \"mask\": \"255.255.255.255\",\r\n                \"destinationPort\": \"80\"\r\n            },\r\n            \"parametersToRemove\": [],\r\n            \"subcollectionResources\": {\r\n                \"profiles:7fcb57d260da\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }],\r\n                \"profiles:562743e454d3\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }],\r\n                \"profiles:ac342ed5842f\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }]\r\n            }\r\n        }],\r\n        \"ltm:pool:94adec8403f0\": [{\r\n            \"parameters\": {\r\n                \"name\": \"{{big-iq-app-name}}\",\r\n                \"loadBalancingMode\": \"least-connections-member\",\r\n                \"ignorePersistedWeight\": false\r\n            },\r\n            \"parametersToRemove\": [],\r\n            \"subcollectionResources\": {\r\n                \"members:442e85bcdee5\": [{\r\n                        \"parameters\": {\r\n                            \"port\": 80,\r\n                            \"nodeReference\": {\r\n                                \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-1-name}}\",\r\n                                \"fullPath\": \"# {{big-iq-app-node-1-name}}\"\r\n                            }\r\n                        },\r\n                        \"parametersToRemove\": []\r\n                    },\r\n                    {\r\n                        \"parameters\": {\r\n                            \"port\": 80,\r\n                            \"nodeReference\": {\r\n                                \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-2-name}}\",\r\n                                \"fullPath\": \"# {{big-iq-app-node-2-name}}\"\r\n                            }\r\n                        },\r\n                        \"parametersToRemove\": []\r\n                    },\r\n                    {\r\n                        \"parameters\": {\r\n                            \"port\": 80,\r\n                            \"nodeReference\": {\r\n                                \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-3-name}}\",\r\n                                \"fullPath\": \"# {{big-iq-app-node-3-name}}\"\r\n                            }\r\n                        },\r\n                        \"parametersToRemove\": []\r\n                    }\r\n                ]\r\n            }\r\n        }],\r\n        \"ltm:node:39acd0a9b5ff\": [{\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-1-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-1-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            },\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-2-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-2-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            },\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-3-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-3-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"monitor:http:0f170bc99595\": [{\r\n            \"parameters\": {\r\n                \"name\": \"monitor-http\",\r\n                \"send\": \"GET /\\\\r\\\\n\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"profile:http:7fcb57d260da\": [{\r\n            \"parameters\": {\r\n                \"name\": \"profile_http\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"ltm:profile:tcp:562743e454d3\": [{\r\n            \"parameters\": {\r\n                \"name\": \"f5-tcp-lan\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"ltm:profile:tcp:ac342ed5842f\": [{\r\n            \"parameters\": {\r\n                \"name\": \"tcp-wan-dell\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }]\r\n    },\r\n    \"addAnalytics\": true,\r\n    \"domains\": [],\r\n    \"configSetName\": \"{{big-iq-app-name}}\",\r\n    \"subPath\": \"{{big-iq-app-name}}\",\r\n    \"templateReference\": {\r\n        \"link\": \"https://localhost/mgmt/cm/global/templates/13ba49e8-4b80-33fb-9782-e24a7c86e73b\"\r\n    },\r\n    \"mode\": \"UPDATE\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/tasks/apply-template",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"tasks",
+						"apply-template"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Pool Member ",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-F5-Auth-Token",
+						"value": "{{big-iq-token}}}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"resources\": {\r\n        \"ltm:virtual:ad8b88a0d648\": [{\r\n            \"parameters\": {\r\n                \"name\": \"{{big-iq-app-name}}\",\r\n                \"destinationAddress\": \"{{big-iq-app-ip}}\",\r\n                \"mask\": \"255.255.255.255\",\r\n                \"destinationPort\": \"80\"\r\n            },\r\n            \"parametersToRemove\": [],\r\n            \"subcollectionResources\": {\r\n                \"profiles:7fcb57d260da\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }],\r\n                \"profiles:562743e454d3\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }],\r\n                \"profiles:ac342ed5842f\": [{\r\n                    \"parameters\": {},\r\n                    \"parametersToRemove\": []\r\n                }]\r\n            }\r\n        }],\r\n        \"ltm:pool:94adec8403f0\": [{\r\n            \"parameters\": {\r\n                \"name\": \"{{big-iq-app-name}}\",\r\n                \"loadBalancingMode\": \"least-connections-member\",\r\n                \"ignorePersistedWeight\": false\r\n            },\r\n            \"parametersToRemove\": [],\r\n            \"subcollectionResources\": {\r\n                \"members:442e85bcdee5\": [{\r\n                        \"parameters\": {\r\n                            \"port\": 80,\r\n                            \"nodeReference\": {\r\n                                \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-1-name}}\",\r\n                                \"fullPath\": \"# {{big-iq-app-node-1-name}}\"\r\n                            }\r\n                        },\r\n                        \"parametersToRemove\": []\r\n                    },\r\n                    {\r\n                        \"parameters\": {\r\n                            \"port\": 80,\r\n                            \"nodeReference\": {\r\n                                \"link\": \"#/resources/ltm:node:39acd0a9b5ff/{{big-iq-app-node-2-name}}\",\r\n                                \"fullPath\": \"# {{big-iq-app-node-2-name}}\"\r\n                            }\r\n                        },\r\n                        \"parametersToRemove\": []\r\n                    }\r\n                ]\r\n            }\r\n        }],\r\n        \"ltm:node:39acd0a9b5ff\": [{\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-1-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-1-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            },\r\n            {\r\n                \"parameters\": {\r\n                    \"name\": \"{{big-iq-app-node-2-name}}\",\r\n                    \"address\": \"{{big-iq-app-node-2-ip}}\"\r\n                },\r\n                \"parametersToRemove\": []\r\n            }\r\n        ],\r\n        \"monitor:http:0f170bc99595\": [{\r\n            \"parameters\": {\r\n                \"name\": \"monitor-http\",\r\n                \"send\": \"GET /\\\\r\\\\n\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"profile:http:7fcb57d260da\": [{\r\n            \"parameters\": {\r\n                \"name\": \"profile_http\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"ltm:profile:tcp:562743e454d3\": [{\r\n            \"parameters\": {\r\n                \"name\": \"f5-tcp-lan\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }],\r\n        \"ltm:profile:tcp:ac342ed5842f\": [{\r\n            \"parameters\": {\r\n                \"name\": \"tcp-wan-dell\"\r\n            },\r\n            \"parametersToRemove\": []\r\n        }]\r\n    },\r\n    \"addAnalytics\": true,\r\n    \"domains\": [],\r\n    \"configSetName\": \"{{big-iq-app-name}}\",\r\n    \"subPath\": \"{{big-iq-app-name}}\",\r\n    \"templateReference\": {\r\n        \"link\": \"https://localhost/mgmt/cm/global/templates/13ba49e8-4b80-33fb-9782-e24a7c86e73b\"\r\n    },\r\n    \"mode\": \"UPDATE\"\r\n}"
+				},
+				"url": {
+					"raw": "https://{{big-iq}}/mgmt/cm/global/tasks/apply-template",
+					"protocol": "https",
+					"host": [
+						"{{big-iq}}"
+					],
+					"path": [
+						"mgmt",
+						"cm",
+						"global",
+						"tasks",
+						"apply-template"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
